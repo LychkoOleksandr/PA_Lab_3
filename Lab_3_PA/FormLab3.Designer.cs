@@ -1,6 +1,6 @@
 ﻿namespace Lab_3_PA
 {
-    partial class Form1
+    partial class FormLab3
     {
         public System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.ListBox listBoxRecords;
@@ -119,7 +119,7 @@
             this.Controls.Add(this.txtData);
             this.Controls.Add(this.txtKey);
             this.Controls.Add(this.listBoxRecords);
-            this.Name = "Form1";
+            this.Name = "FormLab3";
             this.Text = "Database Management";
             this.ResumeLayout(false);
             this.PerformLayout();

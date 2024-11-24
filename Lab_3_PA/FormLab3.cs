@@ -1,11 +1,11 @@
 namespace Lab_3_PA;
 
-public partial class Form1 : Form
+public partial class FormLab3 : Form
 {
     private readonly RedBlackTree<int, string> _tree;
     private const string FileName = "tree_data.dat"; 
 
-    public Form1()
+    public FormLab3()
     {
         InitializeComponent();
         _tree = RedBlackTree<int, string>.LoadFromFile(FileName); 
