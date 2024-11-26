@@ -15,8 +15,8 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
 
     private class Node
     {
-        public TKey Key { get; }
-        public TValue Value { get; set; }
+        public TKey? Key { get; }
+        public TValue? Value { get; set; }
         public Node Left { get; set; }
         public Node Right { get; set; }
         public Node Parent { get; set; }
@@ -31,10 +31,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
     }
 
     private Node _root = null!;
-    private int _count;
-
-    public int Count => _count;
-
+    
     public void Add(TKey key, TValue value)
     {
         if (SearchInternal(_root, key) != null)
@@ -47,11 +44,10 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
         {
             _root = newNode;
             _root.Color = NodeColor.Black; 
-            _count++;
             return;
         }
 
-        Node parent = null;
+        Node parent = null!;
         Node current = _root;
 
         while (current != null)
@@ -67,7 +63,6 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
         else
             parent.Right = newNode;
 
-        _count++;
         FixInsert(newNode);
     }
 
@@ -82,7 +77,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
             comparisons++;
             int comparison = key.CompareTo(current.Key);
             if (comparison == 0)
-                return current.Value;
+                return current.Value!;
             current = comparison < 0 ? current.Left : current.Right;
         }
 
@@ -96,15 +91,13 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
             return false; 
 
         DeleteNode(nodeToDelete); 
-        _count--; 
         return true;
     }
 
 
     public void Clear()
     {
-        _root = null;
-        _count = 0;
+        _root = null!;
     }
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
@@ -123,11 +116,13 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
         {
             int comparison = key.CompareTo(node.Key);
             if (comparison == 0)
+            {
                 return node;
+            }
             node = comparison < 0 ? node.Left : node.Right;
         }
 
-        return null;
+        return null!;
     }
 
     private IEnumerable<KeyValuePair<TKey, TValue>> InOrderTraversal(Node node)
@@ -137,7 +132,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
             foreach (var pair in InOrderTraversal(node.Left))
                 yield return pair;
 
-            yield return new KeyValuePair<TKey, TValue>(node.Key, node.Value);
+            yield return new KeyValuePair<TKey, TValue>(node.Key!, node.Value!);
 
             foreach (var pair in InOrderTraversal(node.Right))
                 yield return pair;
@@ -149,7 +144,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
         while (node != _root && node.Parent?.Color == NodeColor.Red)
         {
             Node parent = node.Parent;
-            Node grandparent = parent?.Parent;
+            Node grandparent = parent.Parent;
 
             if (grandparent == null) break; 
 
@@ -181,7 +176,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
             {
                 Node uncle = grandparent.Left;
 
-                if (uncle != null && uncle.Color == NodeColor.Red) 
+                if (uncle is { Color: NodeColor.Red }) 
                 {
                     parent.Color = NodeColor.Black;
                     uncle.Color = NodeColor.Black;
@@ -264,7 +259,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
             {
                 Node sibling = node.Parent.Right;
 
-                if (sibling != null && sibling.Color == NodeColor.Red)
+                if (sibling is { Color: NodeColor.Red })
                 {
                     sibling.Color = NodeColor.Black;
                     node.Parent.Color = NodeColor.Red;
@@ -289,21 +284,19 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
                         sibling = node.Parent.Right;
                     }
 
-                    if (sibling != null)
-                    {
-                        sibling.Color = node.Parent.Color;
-                        node.Parent.Color = NodeColor.Black;
-                        if (sibling.Right != null) sibling.Right.Color = NodeColor.Black;
-                        RotateLeft(node.Parent);
-                        node = _root;
-                    }
+                    if (sibling == null) continue;
+                    sibling.Color = node.Parent.Color;
+                    node.Parent.Color = NodeColor.Black;
+                    if (sibling.Right != null) sibling.Right.Color = NodeColor.Black;
+                    RotateLeft(node.Parent);
+                    node = _root;
                 }
             }
             else
             {
                 Node sibling = node.Parent.Left;
 
-                if (sibling != null && sibling.Color == NodeColor.Red)
+                if (sibling is { Color: NodeColor.Red })
                 {
                     sibling.Color = NodeColor.Black;
                     node.Parent.Color = NodeColor.Red;
@@ -346,7 +339,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
 
 
 
-    private NodeColor GetColor(Node node) => node == null ? NodeColor.Black : node.Color;
+    private NodeColor GetColor(Node node) => node?.Color ?? NodeColor.Black;
 
     private Node FindMin(Node node)
     {
@@ -375,7 +368,7 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
 
         if (newNode != null)
         {
-            newNode.Parent = oldNode.Parent;
+            newNode.Parent = oldNode.Parent!;
         }
     }
 
@@ -471,15 +464,17 @@ public class RedBlackTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>
     public static RedBlackTree<TKey, TValue> LoadFromFile(string fileName)
     {
         var tree = new RedBlackTree<TKey, TValue>();
-        if (File.Exists(fileName))
+        if (!File.Exists(fileName))
         {
-            var json = File.ReadAllText(fileName);
-            var treeData = JsonSerializer.Deserialize<List<KeyValuePair<TKey, TValue>>>(json);
+            return tree;
+        }
+        
+        string json = File.ReadAllText(fileName);
+        var treeData = JsonSerializer.Deserialize<List<KeyValuePair<TKey, TValue>>>(json);
 
-            foreach (var pair in treeData)
-            {
-                tree.Add(pair.Key, pair.Value);
-            }
+        foreach (var pair in treeData!)
+        {
+            tree.Add(pair.Key, pair.Value);
         }
 
         return tree;

@@ -12,3 +12,4 @@ C:\Users\Eugene\RiderProjects\Lab_3_PA\Lab_3_PA\obj\Debug\net8.0-windows\refint\
 C:\Users\Eugene\RiderProjects\Lab_3_PA\Lab_3_PA\obj\Debug\net8.0-windows\Lab_3_PA.pdb
 C:\Users\Eugene\RiderProjects\Lab_3_PA\Lab_3_PA\obj\Debug\net8.0-windows\Lab_3_PA.genruntimeconfig.cache
 C:\Users\Eugene\RiderProjects\Lab_3_PA\Lab_3_PA\obj\Debug\net8.0-windows\ref\Lab_3_PA.dll
+C:\Users\Eugene\RiderProjects\Lab_3_PA\Lab_3_PA\obj\Debug\net8.0-windows\Lab_3_PA.sourcelink.json

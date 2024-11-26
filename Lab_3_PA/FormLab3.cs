@@ -84,7 +84,7 @@ public partial class FormLab3 : Form
     {
         if (int.TryParse(txtKey.Text, out int key) && !string.IsNullOrWhiteSpace(txtData.Text))
         {
-            if (_tree.Update(key, txtData.Text)) // Попытка обновить значение
+            if (_tree.Update(key, txtData.Text)) 
             {
                 MessageBox.Show("Record updated successfully.");
                 DisplayTree();
